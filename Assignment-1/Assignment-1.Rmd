@@ -1,0 +1,75 @@
+---
+title: "machine learning-1"
+output:
+  html_document: default
+  pdf_document: default
+date: "2023-09-10"
+---
+
+```{r}
+Appstore <-read.csv("C:/Users/pardh/OneDrive/Desktop/FML ASSIGNMENT-1/AppleStore.csv")
+```
+
+```{r}
+Appstore
+```
+```{r}
+summary(Appstore)
+```
+```{r}
+mean(Appstore$user_rating_ver)
+```
+```{r}
+median(Appstore$user_rating_ver)
+```
+```{r}
+min(Appstore$user_rating_ver)
+```
+```{r}
+max(Appstore$user_rating_ver)
+```
+```{r}
+sum(Appstore$user_rating_ver)
+```
+```{r}
+sd(Appstore$user_rating_ver)
+
+```
+```{r}
+var(Appstore$user_rating_ver)
+```
+```{r}
+str(Appstore$prime_genre)
+```
+```{r}
+# 3 Descriptive Statistics for the selection of quantitative and categorical variables
+
+table(Appstore$track_name)
+```
+```{r}
+str(Appstore$track_name)
+```
+```{r}
+# 4 Transforming the Variables
+
+log(Appstore$rating_count_ver)
+```
+```{r}
+t <- Appstore$user_rating_ver-mean(Appstore$user_rating)/sd(Appstore$user_rating_ver)
+
+t
+```
+```{r}
+# 5 Plotting one variable
+
+hist(Appstore$user_rating_ver,main = "Histogram for Ratings")
+```
+
+```{r}
+# 6 Scatterplot
+
+plot(Appstore$user_rating_ver,Appstore$rating_count_tot, main = "Scatterplot")
+```
+
+
+
