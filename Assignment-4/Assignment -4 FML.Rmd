@@ -1,0 +1,149 @@
+---
+title: "FML Assignment 4"
+author: "Pardhu suryasriraj sunkara"
+date: "2023-11-08"
+output: html_document
+---
+
+```{r}
+pharm <- read.csv("C:\\Users\\pardh\\OneDrive\\Desktop\\FML\\Assighnment-4\\Pharmaceuticals.csv")
+
+head(pharm)
+
+dim(pharm)
+```
+
+```{r}
+library(tidyverse)
+#install.packages("factoextra")
+library(factoextra)
+library(ISLR)
+
+```
+
+```{r}
+numeric_pharma <- pharm[ , c(3:11)]
+
+dim(numeric_pharma)
+
+numeric_pharma <- na.omit(numeric_pharma)
+
+summary(numeric_pharma)
+
+```
+
+```{r}
+#Normalize
+norm_pharmacy <- scale(numeric_pharma)
+
+summary(norm_pharmacy)
+```
+
+```{r}
+#Virtual
+distance <- get_dist(norm_pharmacy)
+fviz_dist(distance) # This shows the distance between the observatuions
+```
+choosing the clustering algorithm
+
+1. K-means clustering using Euvlidean distance(Kmeans)
+```{r}
+set.seed(159)
+
+#Here the K value is k value is randomly taken as 3
+
+k = 3
+k3 <- kmeans(norm_pharmacy, centers = k, nstart = 21)
+```
+
+```{r}
+#Finding the centroids
+k3$centers
+```
+```{r}
+#Finding the size of each cluster
+k3$size
+```
+```{r}
+k3$cluster
+```
+```{r}
+fviz_cluster(k3, norm_pharmacy)
+```
+there are no outliers. This suggests that all the firms were succesfully assigned to the cluster.
+
+```{r}
+fviz_nbclust(norm_pharmacy, kmeans, method = "wss") #Elnow method
+```
+```{r}
+#install.packages("dbscan")
+#install.packages("fpc")
+library(dbscan)
+library(fpc)
+```
+```{r}
+data(norm_pharmacy)
+plot(norm_pharmacy, pch = 20)
+```
+Determinig the optimal 'eps' value
+```{r}
+dbscan::kNNdistplot(numeric_pharma, k = 4)
+abline(h = 48, lty = 2)
+```
+```{r}
+dbcluster <- fpc::dbscan(numeric_pharma,eps = 48, MinPts = 2)
+plot(dbcluster, numeric_pharma, main = "DBSCAN")
+
+```
+```{r}
+dbcluster
+```
+```{r}
+#Dissimilarity matrix
+d <- dist(numeric_pharma,method = "euclidean")
+
+#Hierarchical clustering using complete Linkage
+hc1 <- hclust(d,method = "complete")
+
+#Plot the obtained dendogram
+plot(hc1,cex = 0.6, hang = -1)
+```
+```{r}
+library(cluster)
+
+#computing with agnes and with different linkage methods
+hc_single <-  agnes(numeric_pharma,method = "single")
+hc_complete <-  agnes(numeric_pharma,method = "complete")
+hc_average <- agnes(numeric_pharma,method = "average")
+
+#comparing agglomerative coefficients
+print(hc_single$ac)
+```
+
+```{r}
+print(hc_complete$ac)
+
+```
+```{r}
+print(hc_average$ac)
+```
+Here, hc_complete is the best linkage method
+
+```{r}
+pltree(hc_complete, cex = 0.6, hang = -1 , main = "Dendograms of agnes")
+
+rect.hclust(hc_complete, k = 4, border = 1:4)
+```
+```{r}
+#Compute divisive hierarical clustering
+hc_diana <- diana(numeric_pharma)
+
+#Divise coefficient; amount of clustering strucuture found
+hc_diana$dc
+```
+```{r}
+#plot dendrogram
+pltree(hc_diana, cex = 0.6, hang = -1 , main = "Dendogram of diana")
+```
+
+
